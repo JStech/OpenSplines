@@ -1,0 +1,9 @@
+Spline class
+  - space (3d, 2d, quaternion)
+  - parameter type
+  - knots
+  - control points
+  - Bezier vs. B-spline vs. ?
+  - polynomial order
+
+Optional enforcement of smoothness
