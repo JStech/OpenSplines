@@ -21,12 +21,23 @@ int main(int argc, char* argv[]) {
          -3,  3,  0,  0,
           3, -6,  3,  0,
          -1,  3, -3,  1;
-    
-    Eigen::SparseMatrix<double> r;
+
+    Eigen::SparseMatrix<double> r(num_query_params, 4*num_segments);
     for (int i = 0; i < num_query_params; ++i) {
-        std::cout << query_params[i] << "\n";
+        int ipart = std::floor(query_params[i]);
+        double fpart = query_params[i] - ipart;
+        if (ipart >= num_segments) {
+            ipart -= (ipart - num_segments) + 1;
+            fpart = query_params[i] - ipart;
+        }
+        std::cerr << i << " " << num_query_params << " " << ipart*4 << " " << 4*num_segments << "\n";
+        r.insert(i, ipart*4+0) = 1;
+        r.insert(i, ipart*4+1) = fpart;
+        r.insert(i, ipart*4+2) = fpart*fpart;
+        r.insert(i, ipart*4+3) = fpart*fpart*fpart;
     }
 
+    std::cout << r;
 }
 
 // vim: filetype=cpp expandtab shiftwidth=4 autoindent smartindent smarttab tabstop=8 softtabstop=4
