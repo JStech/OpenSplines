@@ -30,14 +30,37 @@ int main(int argc, char* argv[]) {
             ipart -= (ipart - num_segments) + 1;
             fpart = query_params[i] - ipart;
         }
-        std::cerr << i << " " << num_query_params << " " << ipart*4 << " " << 4*num_segments << "\n";
         r.insert(i, ipart*4+0) = 1;
         r.insert(i, ipart*4+1) = fpart;
         r.insert(i, ipart*4+2) = fpart*fpart;
         r.insert(i, ipart*4+3) = fpart*fpart*fpart;
     }
 
-    std::cout << r;
+    Eigen::Matrix<double, 4*num_segments, 4*num_segments> C;
+    C.setZero();
+    for (int i = 0; i < num_segments; ++i) {
+        // could be a tensor product
+        C.block<4, 4>(4*i, 4*i) = B;
+    }
+
+    // calculate implied control points
+    Eigen::Matrix<double, 4, 4> d;
+    d <<
+            0,  1,  0,  0,
+           -1,  2,  0,  0,
+            0,  0,  1,  0,
+            0,  0,  0,  1;
+
+    Eigen::Matrix<double, 4*num_segments, 2*num_segments+2> D;
+    D.setZero();
+    D.topLeftCorner<4, 4>() = Eigen::Matrix4d::Identity();
+    for (int i = 0; i < num_segments-1; ++i) {
+        D.block<4, 4>(4*i+4, 2*i+2) = d;
+    }
+
+    Eigen::Matrix3Xd all_cps = (D * control_pts.transpose()).transpose();
+
+    Eigen::Matrix3Xd interpolated_pts = (r * C * all_cps.transpose()).transpose();
 }
 
 // vim: filetype=cpp expandtab shiftwidth=4 autoindent smartindent smarttab tabstop=8 softtabstop=4
