@@ -7,7 +7,12 @@ int main(int argc, char* argv[])
 {
   constexpr int num_segments = 3;
   Eigen::Matrix3Xd control_pts(3, 2 * num_segments + 2);
-  control_pts << 0., 3., 6., 4., 5., 7., 8., 8., 0., -2., -3., -4., -4., -2., 0., 1., 0., 4., 5., 2., 3., 4., 6., 5.;
+  // clang-format off
+  //              0              1         2         3
+  control_pts <<  2.,  2.,  1.,  0., -2., -2., -1.,  0.,
+                  0.,  1.,  2.,  2.,  1.,  0., -2., -2.,
+                  0.,  1.,  1.,  2.,  3.,  4.,  5.,  6.;
+  // clang-format on
   Eigen::RowVectorXd knots(num_segments + 1);
   knots << 0., 1., 2., 3.;
 
@@ -57,6 +62,7 @@ int main(int argc, char* argv[])
   Eigen::Matrix3Xd all_cps = (D * control_pts.transpose()).transpose();
 
   Eigen::Matrix3Xd interpolated_pts = (r * C * all_cps.transpose()).transpose();
+  std::cout << interpolated_pts.transpose() << "\n";
 }
 
 // vim: filetype=cpp expandtab shiftwidth=4 autoindent smartindent smarttab tabstop=8 softtabstop=4
