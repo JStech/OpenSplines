@@ -18,7 +18,7 @@ public:
   virtual void interpolate(std::vector<T> data, std::vector<Real> parameters) = 0;
   virtual void fit(std::vector<T> data) = 0;
   virtual void fit(std::vector<T> data, std::vector<Real> parameters) = 0;
-  virtual T operator()(Real parameter) const = 0;
+  // virtual T operator()(Real parameter) const = 0;
   virtual std::string to_string() = 0;
 
 private:

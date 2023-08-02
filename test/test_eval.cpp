@@ -2,9 +2,11 @@
 #include <Eigen/Core>
 #include <Eigen/Sparse>
 #include <iostream>
+#include <OpenSplines/BezierSpline.hpp>
 
 int main(int argc, char* argv[])
 {
+  Splines::BezierSpline<double, Eigen::Vector3d, int> bs(3);
   constexpr int num_segments = 3;
   Eigen::Matrix3Xd control_pts(3, 2 * num_segments + 2);
   // clang-format off
